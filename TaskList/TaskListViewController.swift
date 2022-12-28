@@ -14,15 +14,16 @@ class TaskListViewController: UITableViewController {
     private let cellID = "task"
     private var taskList = StorageManager.shared.taskList
     private let viewContext = StorageManager.shared.viewContext
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
+        navigationItem.leftBarButtonItem = editButtonItem
         setupNavigationBar()
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: cellID)
         fetchData()
     }
-
+    
     private func setupNavigationBar() {
         title = "Task List"
         navigationController?.navigationBar.prefersLargeTitles = true
@@ -77,7 +78,7 @@ class TaskListViewController: UITableViewController {
     private func save(_ taskName: String) {
         
         let task = Task(context: viewContext)
-       
+        
         task.title = taskName
         taskList.append(task)
         
@@ -86,7 +87,7 @@ class TaskListViewController: UITableViewController {
         
         StorageManager.shared.save()
     }
-
+    
 }
 
 // MARK: - Table View Data Source
@@ -114,5 +115,11 @@ extension TaskListViewController {
             tableView.deleteRows(at: [indexPath], with: .automatic)
             StorageManager.shared.save()
         }
+    }
+    
+    override func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
+        let currentTask = taskList.remove(at: sourceIndexPath.row)
+        taskList.insert(currentTask, at: destinationIndexPath.row)
+        StorageManager.shared.save()
     }
 }
