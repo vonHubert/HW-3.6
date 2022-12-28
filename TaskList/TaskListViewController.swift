@@ -21,6 +21,7 @@ class TaskListViewController: UITableViewController {
         view.backgroundColor = .white
         setupNavigationBar()
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: cellID)
+        fetchData()
     }
 
     private func setupNavigationBar() {
@@ -51,6 +52,11 @@ class TaskListViewController: UITableViewController {
     }
     
     private func fetchData() {
+        let fetchRequest = Task.fetchRequest()
+        taskList = StorageManager.shared.fetchData(from: fetchRequest)
+    }
+    
+    private func DEFUNKTfetchData() {
         let fetchRequest = Task.fetchRequest()
         
         do {
