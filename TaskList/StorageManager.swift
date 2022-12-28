@@ -27,9 +27,22 @@ class StorageManager {
         return taskList
     }
     
-    func save(task: Task) {
+    func save() {
         if viewContext.hasChanges {
             do {
+                try viewContext.save()
+            } catch let error {
+                print(error)
+            }
+        }
+    }
+    
+    func delete(at index: Int) {
+        taskList.remove(at: index)
+        print("removed at index \(index)")
+        if viewContext.hasChanges {
+            do {
+                print("delete change found")
                 try viewContext.save()
             } catch let error {
                 print(error)

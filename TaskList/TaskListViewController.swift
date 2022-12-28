@@ -6,7 +6,6 @@
 //
 
 import UIKit
-//import CoreData
 
 
 
@@ -85,27 +84,9 @@ class TaskListViewController: UITableViewController {
         let cellIndex = IndexPath(row: taskList.count - 1, section: 0)
         tableView.insertRows(at: [cellIndex], with: .automatic)
         
-        StorageManager.shared.save(task: task)
+        StorageManager.shared.save()
     }
-    private func DEFsave(_ taskName: String) {
-        
-        let task = Task(context: viewContext)
-       
-        task.title = taskName
-        taskList.append(task)
-        
-        let cellIndex = IndexPath(row: taskList.count - 1, section: 0)
-        tableView.insertRows(at: [cellIndex], with: .automatic)
-        
-        if viewContext.hasChanges {
-            do {
-                try viewContext.save()
-            } catch let error {
-                print(error)
-            }
-        }
-    
-    }
+
 }
 
 // MARK: - Table View Data Source
@@ -125,4 +106,13 @@ extension TaskListViewController {
     }
 }
 
-
+// MARK: - UITableViewDelegate
+extension TaskListViewController {
+    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        if editingStyle == .delete {
+            taskList.remove(at: indexPath.row)
+            tableView.deleteRows(at: [indexPath], with: .automatic)
+            StorageManager.shared.save()
+        }
+    }
+}
