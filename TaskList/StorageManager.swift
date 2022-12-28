@@ -11,8 +11,8 @@ import UIKit
 
 class StorageManager {
     static let shared = StorageManager()
-    private var taskList: [Task] = []
-    private let viewContext = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+    var taskList: [Task] = []
+    let viewContext = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     
     private init() {}
     
@@ -27,23 +27,13 @@ class StorageManager {
         return taskList
     }
     
-//    func save(_ taskName: String) {
-//
-//        let task = Task(context: viewContext)
-//
-//        task.title = taskName
-//        taskList.append(task)
-//
-//        let cellIndex = IndexPath(row: taskList.count - 1, section: 0)
-//        tableView.insertRows(at: [cellIndex], with: .automatic)
-//
-//        if viewContext.hasChanges {
-//            do {
-//                try viewContext.save()
-//            } catch let error {
-//                print(error)
-//            }
-//        }
-//
-//    }
+    func save(task: Task) {
+        if viewContext.hasChanges {
+            do {
+                try viewContext.save()
+            } catch let error {
+                print(error)
+            }
+        }
+    }
 }

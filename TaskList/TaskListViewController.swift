@@ -6,15 +6,15 @@
 //
 
 import UIKit
-import CoreData
+//import CoreData
 
 
 
 class TaskListViewController: UITableViewController {
     
     private let cellID = "task"
-    private var taskList: [Task] = []
-    private let viewContext = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+    private var taskList = StorageManager.shared.taskList
+    private let viewContext = StorageManager.shared.viewContext
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -56,16 +56,6 @@ class TaskListViewController: UITableViewController {
         taskList = StorageManager.shared.fetchData(from: fetchRequest)
     }
     
-    private func DEFUNKTfetchData() {
-        let fetchRequest = Task.fetchRequest()
-        
-        do {
-            taskList = try viewContext.fetch(fetchRequest)
-        } catch let error {
-            print("No fetch data", error)
-        }
-    }
-    
     private func showAlert(withTitle title: String, andMessage message: String) {
         let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
         
@@ -86,6 +76,18 @@ class TaskListViewController: UITableViewController {
     }
     
     private func save(_ taskName: String) {
+        
+        let task = Task(context: viewContext)
+       
+        task.title = taskName
+        taskList.append(task)
+        
+        let cellIndex = IndexPath(row: taskList.count - 1, section: 0)
+        tableView.insertRows(at: [cellIndex], with: .automatic)
+        
+        StorageManager.shared.save(task: task)
+    }
+    private func DEFsave(_ taskName: String) {
         
         let task = Task(context: viewContext)
        
